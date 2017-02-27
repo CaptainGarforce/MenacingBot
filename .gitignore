@@ -5,3 +5,4 @@ node_modules/*
 
 #OS junk files
 *.DS_Store
+.vscode/launch.json

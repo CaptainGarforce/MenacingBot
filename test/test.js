@@ -3,7 +3,6 @@ var rewire = require("rewire");
 var bot = rewire('../index.js');
 
 //rewiring
-pickTweet = bot.__get__('pickTweet'); 
 tweetOK = bot.__get__('tweetOK'); 
 tweetLengthOK = bot.__get__('tweetLengthOK'); 
 
@@ -13,15 +12,6 @@ describe('canary test', function() {
 		expect(true).to.eql(true);
 	});
 });
-
-
-describe('pick phrase test', function() {
-	it ('it should return a phrase', function(){
-		var phrase = pickTweet();
-		expect(phrase).to.not.eql(undefined);
-	});
-});
-
 
 describe('phrase length tests', function() {
 	it ('it should return true if phrase is = 130 char', function(){

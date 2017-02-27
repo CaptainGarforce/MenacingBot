@@ -1,20 +1,18 @@
 {
-  "name": "blank-lambda-bot",
+  "name": "menacing-bot",
   "version": "1.0.0",
-  "description": "a blank lambda-bot template",
+  "description": "Makes your images more menacing.",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "mocha"
   },
   "keywords": [
-    "aws",
-    "lambda",
-    "bot",
-    "template"
+    "bot"
   ],
-  "author": "Erin McKean",
-  "license": "ISC",
-  "repository": "https://github.com/emckean/blank-lambda-bot",
+  "author": "Captain Garforce",
+  "license": "",
+  "repository": "",
   "devDependencies": {
     "chai": "^3.5.0",
     "del": "^2.2.0",
@@ -29,7 +27,8 @@
     "run-sequence": "^1.2.1"
   },
   "dependencies": {
-    "botfiles": "file:///Users/emckean/Code/blank-lambda-bot/botfiles",
+    "async": "^2.1.4",
+    "sharp": "^0.17.2",
     "twit": "^2.2.4",
     "underscore": "^1.8.3",
     "wordfilter": "^0.2.6"
