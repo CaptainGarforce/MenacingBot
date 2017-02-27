@@ -1,58 +1,18 @@
 const Twit = require('twit');
-const wordfilter = require('wordfilter');
-const T = new Twit(require('./botfiles/config.js'));
+const twitClient = new Twit(require('./botfiles/config.js'));
 const imgManip = require('./imageManips');
 const fs = require('fs');
 const async = require('async');
-const https = require('https');
-const Stream = require('stream').Transform;
 const sharp = require('sharp');
 const request = require('request');
+const SendTweetWithImage = require('./sendTweetWithImage')
 
-//functions 
-  function tweetOK(phrase) {
-      if (!wordfilter.blacklisted(phrase) && phrase !== undefined && phrase !== "" && tweetLengthOK(phrase)){
-        return true;
-      } else {
-        return false;
-      }
-  }
-
-  function tweetLengthOK(phrase) {
-      if (phrase.length <= 130){
-        return true;
-      } else {
-        return false;
-      }
-  }
-  function SendTweetWithImage(text, image){
-    const uploadParams = {
-      media_data: image.toString('base64')
-    };
-    //This silly nonsense only accepts a file path...
-    //T.postMediaChunked(uploadParams, function(err, data, response){
-    T.post('media/upload', uploadParams, function(err, data, response){
-      if (err != null) {
-        console.log('upload failed')
-        console.log(err);
-        return;
-      }
-      const tweet = {
-        status: text,
-        media_ids: [data.media_id_string]
-      };
-      T.post('statuses/update', tweet, function(err, data, response){
-        if (err!=null){
-          console.log('tweet failed');
-          console.log(err);
-        }
-      });
-    });
-  }
+const menacingDir = './SourceImages/Menacing/';
+const speedlinePath = './SourceImages/speedlines.png';
 
 const myUserId = 787264882110521344;
 
-const userStream = T.stream('user');
+const userStream = twitClient.stream('user');
 userStream.on('error', function(err){
   console.log('stream error');
   console.log(err);
@@ -101,28 +61,21 @@ function tweetHandler(eventMsg)
             request(imageURL).pipe(bufferXform);
           },
           charPaths: function(parCallback){
-            const menacingDir = './SourceImages/Menacing/';
-            async.waterfall([
-              function(wfCallback){
-                fs.readdir(menacingDir, wfCallback);
-              },
-              function(charPaths, wfCallback){
-                const fullPaths = charPaths.map((p) => menacingDir + p);
-                wfCallback(null, fullPaths);
-              }
-            ], parCallback);
+            fs.readdir(menacingDir, parCallback);
           }
-        },callback);
+        },
+        callback);
       },
       function(parallelResults, callback){
-        imgManip(parallelResults.image, imageWidth, imageHeight, './SourceImages/speedlines.png', parallelResults.charPaths, callback);
+        const fullPaths = parallelResults.charPaths.map((p) => menacingDir + p);
+        imgManip(parallelResults.image, imageWidth, imageHeight, speedlinePath, fullPaths, callback);
       }],
       function(err, results){
         if (err != null){
           console.log(`error: ${err}`);
           return;
         }
-        SendTweetWithImage(`@${sender} Menacing!`, results);
+        SendTweetWithImage(twitClient, `@${sender} Menacing!`, results);
       }
     );
   }

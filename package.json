@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "async": "^2.1.4",
+    "request": "^2.79.0",
     "sharp": "^0.17.2",
     "twit": "^2.2.4",
     "underscore": "^1.8.3",

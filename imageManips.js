@@ -7,7 +7,7 @@ const gridDimensions = 12;
 //bool[,] squares
 function GetAvailableSquares(squares)
 {
-  results = [];
+  let results = [];
   for (let x = 0; x < squares.length; ++x)
   {
     for (let y = 0 ; y < squares[x].length; ++y)
